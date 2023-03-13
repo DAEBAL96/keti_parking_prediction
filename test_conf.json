@@ -1,0 +1,8 @@
+{
+    "Deep" : ["KETI015", "KETI014"],
+    "LoRa" : {         
+        "702c1ffffe4a2c0a":"KETI001",
+        "702c1ffffe3cd7e2":"KETI002"
+    }
+
+}
