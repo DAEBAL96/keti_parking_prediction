@@ -14,7 +14,7 @@ const m2m_header = {
                     'X-M2M-RI': '12345',
                     'X-M2M-Origin': 'S'
                 }
-var parsing_start_day = "20230310" // rcn header value --> yyyymmdd 
+var parsing_start_day = "20230301" // rcn header value --> yyyymmdd 
                                    // cra=20230221T21  --> 이후 데이터 적측 시 T21에서 1씩 더해서 parsing_start_day값 넣으면 될 듯
 
 

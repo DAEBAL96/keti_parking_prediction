@@ -24,7 +24,7 @@ scaler = MinMaxScaler(feature_range=(0, 1))
 dataset = scaler.fit_transform(data)
 
 # split data into train and test sets
-train_size = int(len(dataset) * 0.67)
+train_size = int(len(dataset) * 0.8)
 test_size = len(dataset) - train_size
 train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]
 
@@ -51,7 +51,7 @@ model = Sequential()
 model.add(LSTM(200, input_shape=(24, 1)))
 model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(train_X, train_Y, epochs=100, batch_size=72, verbose=2)
+model.fit(train_X, train_Y, epochs=100, batch_size=64, verbose=2)
 
 # make predictions
 train_predict = model.predict(train_X)

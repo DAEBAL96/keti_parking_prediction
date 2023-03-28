@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from tensorflow import keras
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM
@@ -18,8 +19,8 @@ df.fillna(method='ffill', inplace=True)
 df.fillna(method='bfill', inplace=True)
 
 # Split the data into training and testing sets
-train_data = df.loc['2023-03-13 08:00:00':'2023-03-21 00:00:00', 'congestion_rate'].values
-test_data = df.loc['2023-03-21 00:00:00':'2023-03-23 20:00:00', 'congestion_rate'].values
+train_data = df.loc['2023-03-01 22:00:00':'2023-03-16 09:00:00', 'congestion_rate'].values
+test_data = df.loc['2023-03-16 09:00:00':'2023-03-26 21:00:00', 'congestion_rate'].values
 
 # Scale the data
 scaler = MinMaxScaler(feature_range=(0, 1))
@@ -44,13 +45,20 @@ test_X = np.reshape(test_X, (test_X.shape[0], test_X.shape[1], 1))
 
 # Create the LSTM model
 model = Sequential()
-model.add(LSTM(units=100, return_sequences=True, input_shape=(train_X.shape[1], 1)))
+model.add(LSTM(units=200, return_sequences=True, input_shape=(train_X.shape[1], 1)))
 model.add(LSTM(units=100))
-model.add(Dense(1))
-model.compile(optimizer='adam', loss='mean_squared_error')
-
+model.add(Dense(4))
+model.add(Dense(1, activation='sigmoid'))
+loss = keras.losses.SparseCategoricalCrossentropy
+optim = keras.optimizers.Adam(lr=0.001)
+metrics = ["accuracy"]
+model.compile(loss='mean_squared_error', optimizer=optim, metrics=metrics)
+# model.compile(optimizer='adam', loss='mean_squared_error')
 # Train the model
-model.fit(train_X, train_y, epochs=100, batch_size=32, verbose=2)
+model_result = model.fit(train_X, train_y, epochs=200, batch_size=64, verbose=2)
+print
+print(model_result.summary())
+
 
 # Generate predictions
 train_predict = model.predict(train_X)
@@ -62,10 +70,26 @@ train_y = scaler.inverse_transform([train_y])
 test_predict = scaler.inverse_transform(test_predict)
 test_y = scaler.inverse_transform([test_y])
 
+# print("Train 예측/분류 결과")
+# print("Accuracy: {0:3f}\n".format(accuracy_score(df_train["BAD"],y_pred_train_class)))
+# print("Confusion Matrix: \N{}".format(confusion_matrix(df_train["BAD"].y_pred_train_class)),"\n")
+# print(classification_report(df_train["BAD"],y_pred_train_class, digits=3))
+
+# print("Test 예측/분류 결과")
+# print("Accuracy: {0:3f}\n".format(accuracy_score(df_train["BAD"],y_pred_train_class)))
+# print("Confusion Matrix: \N{}".format(confusion_matrix(df_train["BAD"].y_pred_train_class)),"\n")
+# print(classification_report(df_train["BAD"],y_pred_train_class, digits=3))
+
 # Plot the results
 import matplotlib.pyplot as plt
 # plt.plot(train_y.reshape(-1), label="Actual Train Data")
 # plt.plot(train_predict.reshape(-1), label="Predicted Train Data")
+# print("test_y : ")
+# print(test_y.reshape(-1))
+# print("predict : ")
+# print(test_predict.reshape(-1))
+
+
 plt.plot(test_y.reshape(-1), label="Actual Test Data")
 plt.plot(test_predict.reshape(-1), label="Predicted Test Data")
 plt.legend()
