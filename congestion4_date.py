@@ -8,7 +8,7 @@ from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 
 # load the dataset
-df = pd.read_csv('./parking_state.csv')
+df = pd.read_csv('./parking_state_0326.csv')
 
 # convert time_stamp column to datetime
 df['time_stamp'] = pd.to_datetime(df['time_stamp'])
@@ -51,11 +51,12 @@ model = Sequential()
 model.add(LSTM(200, input_shape=(24, 1)))
 model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(train_X, train_Y, epochs=100, batch_size=64, verbose=2)
+model.fit(train_X, train_Y, epochs=1, batch_size=64, verbose=2)
 
 # make predictions
 train_predict = model.predict(train_X)
 test_predict = model.predict(test_X)
+
 # invert predictions back to original scale
 train_predict = scaler.inverse_transform(train_predict)
 train_Y = scaler.inverse_transform([train_Y])

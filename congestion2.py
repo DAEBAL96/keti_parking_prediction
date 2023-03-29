@@ -5,7 +5,7 @@ from keras.models import Sequential
 from keras.layers import LSTM, Dense
 
 # Load data from CSV file
-df = pd.read_csv('./parking_state.csv')
+df = pd.read_csv('./parking_state_0324.csv')
 
 # Preprocess data
 df['time_stamp'] = pd.to_datetime(df['time_stamp'])
@@ -18,6 +18,10 @@ data = scaler.fit_transform(data)
 look_back = 24
 train_size = int(len(data) * 0.8)
 train_data, test_data = data[:train_size,:], data[train_size:,:]
+print(type(test_data))
+print(test_data)
+
+
 train_X, train_y = [], []
 for i in range(look_back, len(train_data)):
     train_X.append(train_data[i-look_back:i, 0])

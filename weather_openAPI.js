@@ -10,10 +10,10 @@ queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent(
 queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /* */
 queryParams += '&' + encodeURIComponent('dataCd') + '=' + encodeURIComponent('ASOS'); /* */
 queryParams += '&' + encodeURIComponent('dateCd') + '=' + encodeURIComponent('HR'); /* */
-queryParams += '&' + encodeURIComponent('startDt') + '=' + encodeURIComponent('20220705'); /* */
-queryParams += '&' + encodeURIComponent('startHh') + '=' + encodeURIComponent('01'); /* */
-queryParams += '&' + encodeURIComponent('endDt') + '=' + encodeURIComponent('20220715'); /* */
-queryParams += '&' + encodeURIComponent('endHh') + '=' + encodeURIComponent('23'); /* */
+queryParams += '&' + encodeURIComponent('startDt') + '=' + encodeURIComponent('20230301'); /* */
+queryParams += '&' + encodeURIComponent('startHh') + '=' + encodeURIComponent('22'); /* */
+queryParams += '&' + encodeURIComponent('endDt') + '=' + encodeURIComponent('20230326'); /* */
+queryParams += '&' + encodeURIComponent('endHh') + '=' + encodeURIComponent('21'); /* */
 queryParams += '&' + encodeURIComponent('stnIds') + '=' + encodeURIComponent('108'); /* */
 
 request({

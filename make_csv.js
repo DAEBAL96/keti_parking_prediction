@@ -14,16 +14,16 @@ const m2m_header = {
                     'X-M2M-RI': '12345',
                     'X-M2M-Origin': 'S'
                 }
-var parsing_start_day = "20230301" // rcn header value --> yyyymmdd 
+let parsing_start_day = "20230328" // rcn header value --> yyyymmdd 
                                    // cra=20230221T21  --> 이후 데이터 적측 시 T21에서 1씩 더해서 parsing_start_day값 넣으면 될 듯
 
 
-var parking_conf_json = {};
-var all_parking_hist = {};
-var LoRa_spot_list = [];
-var Deep_spot_list = [];
-var common_min_time = null;
-var csv_latest_time = null;
+let parking_conf_json = {};
+let all_parking_hist = {};
+let LoRa_spot_list = [];
+let Deep_spot_list = [];
+let common_min_time = null;
+let csv_latest_time = null;
 
 let parking_csv = {};
 
@@ -60,7 +60,6 @@ const make_init_parking_state = async function(){
                 else if(common_min_time < Number(response.data["m2m:rsp"]["m2m:cin"][cin_length-1]["ct"].replace('T',''))){
                     common_min_time = Number(response.data["m2m:rsp"]["m2m:cin"][cin_length-1]["ct"].replace('T',''));
                 }
-
 
                 if(csv_latest_time === null){
                     csv_latest_time = Number(response.data["m2m:rsp"]["m2m:cin"][0]["ct"].replace('T',''));
@@ -113,8 +112,12 @@ const make_init_parking_state = async function(){
         }
         all_parking_hist = JSON.stringify(all_parking_hist)
         fs.writeFileSync("./check_all_parking_state.json", all_parking_hist)
+
+
         common_min_time = String(common_min_time).substr(0, 10);
         csv_latest_time = String(csv_latest_time).substr(0, 10);
+
+        
         make_time_stamp_obj(common_min_time, csv_latest_time)
         make_time_stamp_state()
         fs.writeFileSync("./final_csv.json", JSON.stringify(csv_avg_cal(parking_csv)))
