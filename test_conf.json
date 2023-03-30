@@ -1,8 +1,24 @@
 {
-    "Deep" : ["KETI015", "KETI014"],
-    "LoRa" : {         
-        "702c1ffffe4a2c0a":"KETI001",
-        "702c1ffffe3cd7e2":"KETI002"
-    }
-
+    "Deep" : ["KETI014", "KETI015", "KETI016", "KETI017", "KETI018", "KETI019",
+              "KETI020", "KETI021", "KETI022", "KETI023", "KETI024", "KETI025",
+              "KETI026", "KETI027", "KETI028", "KETI029", "KETI030", "KETI031",
+              "KETI032", "KETI033", "KETI034", "KETI035", "KETI036", "KETI037",
+              "KETI038", "KETI039", "KETI040", "KETI041", "KETI042", "KETI069",
+              "KETI070", "KETI071", "KETI072", "KETI073", "KETI074", "KETI075",
+              "KETI076", "KETI077", "KETI078", "KETI079", "KETI080", "KETI081",
+              "KETI082", "KETI093", "KETI094", "KETI095", "KETI096", "KETI097", 
+              "KETI098", "KETI099", "KETI100", "KETI101", "KETI102", "KETI103",
+              "KETI104", "KETI105", "KETI106", "KETI107", "KETI108", "KETI109",
+              "KETI110", "KETI111", "KETI112", "KETI117", "KETI118", "KETI119",
+              "KETI120", "KETI121", "KETI122", "KETI123", "KETI126", "KETI127",
+              "KETI128", "KETI129", "KETI130", "KETI131", "KETI132", "KETI133",
+              "KETI134", "KETI135", "KETI136", "KETI137", "KETI138", "KETI139",
+              "KETI151", "KETI152", "KETI153", "KETI154", "KETI155", "KETI156",
+              "KETI157", "KETI158", "KETI159", "KETI161", "KETI162",
+              "KETI163", "KETI164", "KETI165", "KETI166", "KETI167", "KETI168",
+              "KETI169", "KETI170", "KETI171", "KETI172", "KETI173", "KETI174", 
+              "KETI175", "KETI176", "KETI177", "KETI178", "KETI180",
+              "KETI182", "KETI184", "KETI185", "KETI186",
+              "KETI187", "KETI188", "KETI189", "KETI190", "KETI192", "KETI207", "KETI208",
+              "KETI209", "KETI210", "KETI211"]
 }

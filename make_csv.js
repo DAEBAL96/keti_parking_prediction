@@ -115,8 +115,9 @@ const make_init_parking_state = async function(){
 
 
         common_min_time = String(common_min_time).substr(0, 10);
-        csv_latest_time = String(csv_latest_time).substr(0, 10);
-
+        // csv_latest_time = String(csv_latest_time).substr(0, 10);
+        console.log("csv_latest_time = ")
+        console.log(csv_latest_time)
         
         make_time_stamp_obj(common_min_time, csv_latest_time)
         make_time_stamp_state()
@@ -132,8 +133,8 @@ let make_time_stamp_state = () => {
     try{
         let original_all_parking_state = JSON.parse(fs.readFileSync('./check_all_parking_state.json', 'utf8'));
         // let parking_csv = JSON.parse(fs.readFileSync('./parking_state_csv.json', 'utf8'));
-        let parking_spot_list = Object.keys(original_all_parking_state)
-        let count_all_parking_spot = parking_spot_list.length
+        let parking_spot_list = Object.keys(original_all_parking_state)     // KETI015, KETI016, KETI017.....
+        let count_all_parking_spot = parking_spot_list.length               // spot count 
         for(var i = 0; i < count_all_parking_spot; i++){    // parking spot check
             let avg_array = [];
             let avg_result = null;
@@ -153,14 +154,24 @@ let make_time_stamp_state = () => {
             for (let [time, value] of Object.entries(original_all_parking_state[parking_spot_list[i]])){  // 해당 parking spot에 있는 properties 추출
                 current_time = time.replace('T','').substr(0, 10);  // 현재 spot별 object에서 긁어낸 시간 key값을 yyyymmddhh -> format으로 바꾸는 것
                 if(check_length === 0){
-                    avg_array.push(convert_value(value))
+                    if( convert_value(value) === 2 ){
+                        avg_array.push(1)
+                    }
+                    else{
+                        avg_array.push(convert_value(value))
+                    }
                 }
                 check_length++;
 
                 /****************************/
                 if(Number(common_min_time) > Number(current_time)){      // common min date보다 해당 spot의 state 올린 처음 시간이 빠를 때 이 state를 shift
                     avg_array = [];
-                    avg_result = convert_value(value)
+                    if( convert_value(value) === 2 ){
+                        avg_result = 1
+                    }
+                    else{
+                        avg_result = convert_value(value)
+                    }
                     interval_blank = true;
                     interval_blank_start_time = current_time;
                 }
@@ -171,7 +182,13 @@ let make_time_stamp_state = () => {
                     avg_result = null;
 
                     interval_start = current_time;
-                    avg_array.push(convert_value(value));
+
+                    if( convert_value(value) === 2 ){
+                        avg_array.push(1)
+                    }
+                    else{
+                        avg_array.push(convert_value(value))
+                    }
                 }
                 /****************************/
                 else if(Number(common_min_time) < Number(current_time)){      // 실질적 result 채우는 동작 부분
@@ -188,7 +205,14 @@ let make_time_stamp_state = () => {
                     }
 
                     if( (interval_blank === false) && (interval_start === current_time)){
-                        avg_array.push(convert_value(value))
+
+                        if( convert_value(value) === 2 ){
+                            avg_array.push(1)
+                        }
+                        else{
+                            avg_array.push(convert_value(value))
+                        }
+
                     }
                     else if( (interval_blank === false) && (CK_list.indexOf(convert_date_format(current_time)) - CK_list.indexOf(convert_date_format(interval_start)) === 1)){
                         avg_result = avg_cal(avg_array)
@@ -196,7 +220,14 @@ let make_time_stamp_state = () => {
                         // console.log("206 line : ", parking_csv[convert_date_format(interval_start)])
                         parking_csv[convert_date_format(interval_start)].push(avg_result)
                         interval_start = current_time;
-                        avg_array.push(convert_value(value))
+
+                        if( convert_value(value) === 2 ){
+                            avg_array.push(1)
+                        }
+                        else{
+                            avg_array.push(convert_value(value))
+                        }
+
                     }
                     else if( (interval_blank === false) && (CK_list.indexOf(convert_date_format(current_time)) - CK_list.indexOf(convert_date_format(interval_start)) > 1)){
                         avg_result = avg_cal(avg_array) 
@@ -205,7 +236,13 @@ let make_time_stamp_state = () => {
                             parking_csv[CK_list[t]].push(avg_result);
                         }
                         interval_start = current_time;
-                        avg_array.push(convert_value(value))
+
+                        if( convert_value(value) === 2 ){
+                            avg_array.push(1)
+                        }
+                        else{
+                            avg_array.push(convert_value(value))
+                        }
                     }
 
                     if(spot_state_length === check_length){ // spot의 마지막 부분
@@ -298,6 +335,9 @@ let convert_value = (value) => {
     }
     else if(value === "free"){
         return 0
+    }
+    else{
+        return 2
     }
 }
 
