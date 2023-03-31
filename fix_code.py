@@ -10,6 +10,18 @@ from keras.layers import Dense, LSTM, GRU
 
 # Load the input CSV data
 data = pd.read_csv('./parking_state.csv')
+data = data.set_index('time_stamp')
+print(data)
+
+
+
+
+
+
+
+
+
+
 # Preprocess the data
 train_data = data[data['time_stamp'] <= '2023-03-22 14:00:00']
 test_data = data[data['time_stamp'] > '2023-03-22 14:00:00']
@@ -56,8 +68,6 @@ svm_model.fit(train_x, train_y)
 # xgb_model.fit(train_x, train_y, eval_set=[(x_train, y_train), (x_test, y_test)], early_stopping_rounds=50, verbose=False)
 
 # Predict the values for LSTM, GRU and SVM models
-print("test : ")
-print(test_x.reshape(test_x.shape[0], 1, test_x.shape[1]))
 lstm_predicted = lstm_model.predict(test_x.reshape(test_x.shape[0], 1, test_x.shape[1]))
 gru_predicted = gru_model.predict(test_x.reshape(test_x.shape[0], 1, test_x.shape[1]))
 svm_predicted = svm_model.predict(test_x)

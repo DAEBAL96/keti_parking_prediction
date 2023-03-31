@@ -17,4 +17,4 @@ df.reset_index(inplace=True)
 # Print the resulting DataFrame
 print(df)
 
-df.to_csv("./parking_state.csv", encoding= "euc-kr")
+df.to_csv("./test.csv", encoding= "euc-kr")

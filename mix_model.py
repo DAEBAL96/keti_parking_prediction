@@ -10,42 +10,55 @@ from keras.layers import Dense, LSTM, GRU
 
 # Load the input CSV data
 data = pd.read_csv('./parking_state.csv')
-# Preprocess the data
-train_data = data[data['time_stamp'] <= '2023-03-22 14:00:00']
-test_data = data[data['time_stamp'] > '2023-03-22 14:00:00']
 
+t_data = data.iloc[:10, 1:3].values
+print(t_data)
+
+# Preprocess the data
+train_data = data[data['time_stamp'] <= '2023-03-22 14:00:00']  # csv에서 불러온 것이다 보니 Unnamed index 붙어있다.
+test_data = pd.read_csv('./test.csv')
+# test_data = data[data['time_stamp'] > '2023-03-22 14:00:00']
+print(train_data)   # 
 print("test 12")
 
-# print(train_data.loc[:, "time_stamp"])      # time stamp 만 남김
+print(train_data.loc[:, "time_stamp"])      # time stamp 만 남김
 # print(train_data.drop("time_stamp", axis=1))    # time_stamp column 은 날아가고 새로운 index가 생기며 index 값은 Null이 아닌 숫자 매긴다
 # print(train_data.loc[:, ["congestion_rate", "week"]])   # congestion_rate, week 만 남김
 
 # Convert the data to numpy arrays
 train_x = np.array(train_data[['congestion_rate', 'week']])
-train_y = np.array(train_data['congestion_rate'])
+train_y = np.array(train_data['congestion_rate'])           # 1차 nparray로 congestion_rate value가 쭉 들어가있음
 test_x = np.array(test_data[['congestion_rate', 'week']])
 test_y = np.array(test_data['congestion_rate'])
 
 
 # print(test_data.index)
 # Build the LSTM model
-print("test1")
-print(train_x.shape[0]) # 497
-print("test2")
-print(train_x.shape[1]) # 2
+# print(train_x)           # [ [value , week], [value , week], [value , week], [], [] ...... ] ->
+# print(train_x.shape[0])
+# print(train_x.shape[1])     # 
+# print(type(train_x[0]))     # numpy.ndarray
+# print()
+# print("test3")
+# print(train_y.reshape[-1,1])
+# print("test1")
+# print(train_x.shape[0]) # 497
+# print("test2")
+# print(train_x.shape[1]) # 2
 
 lstm_model = Sequential()
 lstm_model.add(LSTM(50, input_shape=(1, 2)))
 lstm_model.add(Dense(1))
 lstm_model.compile(loss='mean_squared_error', optimizer='adam')
-lstm_model.fit(train_x.reshape(train_x.shape[0], 1, train_x.shape[1]), train_y, epochs=100, batch_size=32, verbose=2)
-
+lstm_model.fit(train_x.reshape(train_x.shape[0], 1, train_x.shape[1]), train_y, epochs=50, batch_size=32, verbose=2)
+                                # 행의 갯수만큼 3차배열 수로 만들고, 행은 1개로하고, 열의 갯수는 동일하게 입체적으로 np.array를 눕히는 것
+                                # 샘플수 , time step 수, feature 수 가 입력값이라고 되어있음
 # Build the GRU model
 gru_model = Sequential()
 gru_model.add(GRU(50, input_shape=(1, 2)))
 gru_model.add(Dense(1))
 gru_model.compile(loss='mean_squared_error', optimizer='adam')
-gru_model.fit(train_x.reshape(train_x.shape[0], 1, train_x.shape[1]), train_y, epochs=100, batch_size=32, verbose=2)
+gru_model.fit(train_x.reshape(train_x.shape[0], 1, train_x.shape[1]), train_y, epochs=50, batch_size=32, verbose=2)
 
 # Build the SVM model
 svm_model = SVR(kernel='rbf', C=1000, gamma=0.1)
