@@ -42,14 +42,16 @@ for i in range(10):
 
 # Make predictions for desired time period
 start_date = pd.to_datetime('2023-03-23 21:00:00')
-end_date = pd.to_datetime('2023-03-27 00:00:00')
+end_date = pd.to_datetime('2023-03-25 00:00:00')
 num_hours = int((end_date - start_date).total_seconds() / 3600) + 1
 preds = []
 for i in range(num_hours):
     x = test_data[-look_back:].reshape(1, look_back, 1)
     pred = model.predict(x)[0][0]
     preds.append(pred)
+    print("preds = ", preds)
     test_data = np.append(test_data, pred).reshape(-1, 1)
+    print("test_data = ", test_data)
     
 # Scale predictions back to original range
 preds = scaler.inverse_transform(np.array(preds).reshape(-1, 1))
