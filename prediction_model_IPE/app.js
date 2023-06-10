@@ -17,7 +17,7 @@ var options = {
     usesecure: conf.usesecure,
 };
 
-/* model input data init -> mysql connection */
+/* model input data init -> Mobius(CSE)'s db storage(mysql) connection */
 
 const connection = mysql.createConnection({
     host: '203.253.128.164',
@@ -26,12 +26,12 @@ const connection = mysql.createConnection({
     database: 'mobiusdb'
 });
 
-connection.connect((err) => {
+connection.connect((err) => {   // db connect function
     if (err) throw err;
     console.log('Connected to the database!');
 });
 
-async function exportData() { // limit 설정 lack 크기 만큼 바뀌도록 코드 변경해주기
+async function exportData() { // limit set -> LSTM input lack 길이만큼 Mobius resource db에서 lack 끌어오도록 query 설정 후 resource data export
     let query = `select c.pi, c.ri, c.con, l.ct from mobiusdb.cin as c, mobiusdb.lookup as l where c.ri = l.ri and c.pi = '/Mobius/keti_parking_congestion/actual_all_congestion' ORDER BY l.ct DESC LIMIT 10`;
 
     let results = await new Promise((resolve, reject) => {
@@ -40,10 +40,12 @@ async function exportData() { // limit 설정 lack 크기 만큼 바뀌도록 �
             resolve(results);
         });
     });
+
     fs.writeFile(`./act_congestion_latest10.json`, JSON.stringify(results), (err) => {
         if (err) throw err;
         console.log(`Data exported to act_congestion_10.json file.`);
     });
+    
     connection.end((err) => {
         if (err) throw err;
         console.log('Connection closed.');
@@ -143,7 +145,7 @@ function create_sub_all(count, callback) {
     }
 }
 
-setTimeout(setup_resources, 100, 'crtae');
+setTimeout(setup_resources, 100, 'crtae');  // set oneM2M resource flow (start - crtae)
 
 function setup_resources(_status) {
     sh_state = _status;
@@ -152,10 +154,10 @@ function setup_resources(_status) {
 
     if (_status === 'crtae') {
         onem2m_client.create_ae(conf.ae.parent, conf.ae.name, conf.ae.appid, function (status, res_body) {
-            console.log(res_body);
+            // console.log(res_body);
             if (status == 2001) {
                 ae_response_action(status, res_body, function (status, aeid) {
-                    console.log('x-m2m-rsc : ' + status + ' - ' + aeid + ' <----');
+                    // console.log('x-m2m-rsc : ' + status + ' - ' + aeid + ' <----');
                     request_count = 0;
 
                     setTimeout(setup_resources, 100, 'rtvae');
@@ -242,22 +244,7 @@ function setup_resources(_status) {
     }
 }
 
-// onem2m_client.on('notification', function (source_uri, cinObj) {
-
-//     console.log(source_uri, cinObj);
-
-//     var path_arr = source_uri.split('/')
-//     var event_cnt_name = path_arr[path_arr.length-2];
-//     var content = cinObj.con;
-//     console.log("event name = ", event_cnt_name);
-//     /* ***** USER CODE ***** */
-//     if(event_cnt_name === 'led') {
-//         // send to tas
-//         thyme_tas.send_to_tas(event_cnt_name, content.v);
-//     }
-//     /* */
-// });
-exportData()
+exportData() // latest data export at CSE's Mysql db storage
 onem2m_client.on('notification', function (source_uri, cinObj) {
 
     console.log(source_uri, cinObj);
@@ -268,30 +255,23 @@ onem2m_client.on('notification', function (source_uri, cinObj) {
     console.log("event name = ", event_cnt_name);
 
     /* actual congestion sub noti  */
+
     if(event_cnt_name === 'actual_all_congestion') {
         console.log("actual_all_congestion noti app.js @@@@@@@@@@@@@@@@@@@@@@")
         thyme_tas.send_to_tas(event_cnt_name, content);
-        // if(input_data_conf["init"]){
-        //     console.log("app.js init")
-        //     exportData()
-        //     input_data_conf["init"] = false;
-        //     thyme_tas.send_to_tas(event_cnt_name, content);
-        // }
-        // else{
-        //     console.log("app.js init")
-        //     thyme_tas.send_to_tas(event_cnt_name, content);
-        // }
     }
-    if(event_cnt_name === 'test') {
-        console.log("test noti app.js ")
-        if(input_data_conf["init"]){
-            exportData()
-            input_data_conf["init"] = false;
-            thyme_tas.send_to_tas(event_cnt_name, content);
-        }
-        else{
-            thyme_tas.send_to_tas(event_cnt_name, content);
-        }
-    }
+
+    // if(event_cnt_name === 'test') {
+    //     console.log("test noti app.js ")
+    //     if(input_data_conf["init"]){
+    //         exportData()
+    //         input_data_conf["init"] = false;
+    //         thyme_tas.send_to_tas(event_cnt_name, content);
+    //     }
+    //     else{
+    //         thyme_tas.send_to_tas(event_cnt_name, content);
+    //     }
+    // }
+
     /* */
 });

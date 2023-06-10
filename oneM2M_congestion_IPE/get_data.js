@@ -4,7 +4,6 @@ const axios = require('axios');
 const fs = require("fs");
 const moment = require('moment');
 
-let weather_ae = "keti_weather"
 /* set device control conf */
 
 const cse_url = "http://203.253.128.164:7579/Mobius";
@@ -25,8 +24,6 @@ let rn = "actual_all_congestion"
 let parent = "/Mobius/keti_parking_congestion/" + rn;
 
 /***************************/
-
-
 
 var options = {
     protocol: conf.useprotocol,
@@ -231,6 +228,8 @@ function setup_resources(_status) {
     }
 }
 
+/* oneM2M noti sub message action function
+
 onem2m_client.on('notification', function (source_uri, cinObj) {
 
     console.log(source_uri, cinObj);
@@ -238,14 +237,11 @@ onem2m_client.on('notification', function (source_uri, cinObj) {
     var path_arr = source_uri.split('/')
     var event_cnt_name = path_arr[path_arr.length-2];
     var content = cinObj.con;
+    console.log("event name = ",event_cnt_name )
 
-    if(event_cnt_name === 'co2') {
-        // send to tas
-        if (socket_arr[path_arr[path_arr.length-2]] != null) {
-            socket_arr[path_arr[path_arr.length-2]].write(JSON.stringify(content) + '<EOF>');
-        }
-    }
 });
+
+*/
 
 
 //----------------------- mqtt module start ---------------------- //
@@ -277,7 +273,8 @@ function timer_upload(period, cnt_idx) {
 
 /***************************************************************************************/
 
-function Hour_interval() {
+
+function Hour_interval() {  // 1Hour interval function -> 
     let offset = 1000 * 60 * 60 * 9
     let now = new Date((new Date()).getTime() + offset)
     let nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0, 0);

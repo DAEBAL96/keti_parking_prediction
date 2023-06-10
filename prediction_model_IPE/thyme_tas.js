@@ -1,18 +1,6 @@
-/**
- * Created by Il Yeup, Ahn in KETI on 2017-02-25.
- */
-
-/**
- * Copyright (c) 2018, OCEAN
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission.
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-// for TAS
+/*
+The module is built on top of "nCube_Thyme_Nodejs - TAS ver"
+*/
 
 global.socket_arr = {};
 
@@ -23,16 +11,10 @@ exports.buffer = tas_buffer;
 // for tas
 
 let mqtt = require('mqtt');
-let moment = require('moment');
 
 /* USER CODE */
-// let getDataTopic = {
-//     temp: '/thyme/temp',
-//     humi: '/thyme/humi'
-// };
-
 let setDataTopic = {
-    test: '/test/topic',
+    // test: '/test/topic',
     actual_all_congestion: '/actual/noti'
 };
 /* */
@@ -91,42 +73,6 @@ let createConnection = () => {
     }
 };
 
-let doSubscribe = (topic) => {
-    if (conf.tas.client.connected) {
-        const qos = 0;
-        conf.tas.client.subscribe(topic, {qos}, (error) => {
-            if (error) {
-                console.log('Subscribe to topics error', error)
-                return;
-            }
-
-            console.log('Subscribe to topics (', topic, ')');
-        });
-    }
-};
-
-let doUnSubscribe = (topic) => {
-    if (conf.tas.client.connected) {
-        conf.tas.client.unsubscribe(topic, error => {
-            if (error) {
-                console.log('Unsubscribe error', error)
-            }
-
-            console.log('Unsubscribe to topics (', topic, ')');
-        });
-    }
-};
-
-let doPublish = (topic, payload) => {
-    if (conf.tas.client.connected) {
-        conf.tas.client.publish(topic, payload, 0, error => {
-            if (error) {
-                console.log('Publish error', error)
-            }
-        });
-    }
-};
-
 let destroyConnection = () => {
     if (conf.tas.client.connected) {
         try {
@@ -160,7 +106,7 @@ exports.ready_for_tas = function ready_for_tas () {
     /* */
 };
  
-exports.send_to_tas = function send_to_tas (topicName, message) {
+exports.send_to_tas = function send_to_tas (topicName, message) {       // LSTM model을 구동중이며 mqtt broker에 sub하기 위해 붙어있는 pred_module.py 쪽으로 mqtt message를 보냄  
     if(setDataTopic.hasOwnProperty(topicName)) {
         conf.tas.client.publish(setDataTopic[topicName], JSON.stringify(message))
         // conf.tas.client.publish(setDataTopic[topicName], message.toString())
